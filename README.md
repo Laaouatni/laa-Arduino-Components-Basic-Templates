@@ -1,2 +1,2 @@
-# Arduino-Joystick-Template
-base code for implementing Joystick component to your arduino project
+# laa Arduino Components Basic Templates
+-[x] Joystick
