@@ -1,28 +1,34 @@
 <script>
   const ESP32_IP = "192.168.238.49";
+  let isFetching = false;
 
   async function analogRead(pin) {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    try {
-      const res = await fetch(`http://${ESP32_IP}/analogRead/${pin}`, {
-        signal,
-      });
-      const text = await res.text();
-      return Number(text);
-    } catch {
-      controller.abort();
-    }
+    if (isFetching) return;
+    isFetching = true;
+
+    const timeout = setTimeout(() => {
+      isFetching = false;
+    }, 1000);
+
+    const res = await fetch(`http://${ESP32_IP}/analogRead/${pin}`);
+    const text = await res.text();
+    clearTimeout(timeout);
+    isFetching = false;
+    return Number(text);
   }
 
   async function analogWrite(pin, value) {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    try {
-      const res = await fetch(`http://${ESP32_IP}/analogWrite/${pin}/${value}`);
-    } catch {
-      controller.abort();
-    }
+    if (isFetching) return;
+    isFetching = true;
+
+    const timeout = setTimeout(() => {
+      isFetching = false;
+    }, 1000);
+
+    const res = await fetch(`http://${ESP32_IP}/analogWrite/${pin}/${value}`);
+    
+    clearTimeout(timeout);
+    isFetching = false;
   }
 
   function map(value, inMin, inMax, outMin, outMax) {
@@ -35,12 +41,13 @@
 
   setInterval(async () => {
     try {
-      potenziometroValue = await analogRead(32);
+      const valorePotenziometro = await analogRead(32);
+      if(valorePotenziometro) potenziometroValue = valorePotenziometro;
       await analogWrite(2, map(potenziometroValue, 0, 2 ** 12, 0, 255));
     } catch (err) {
       console.error(err);
     }
-  }, 350);
+  }, 100);
 </script>
 
 <main class="p-4 w-full grid bg-slate-900">
