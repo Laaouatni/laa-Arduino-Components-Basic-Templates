@@ -12,6 +12,7 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
   };
   Serial.println("WiFi connected! IP Address: " + WiFi.localIP().toString());
+
   // WiFi.mode(WIFI_AP);
   // WiFi.softAP("espWifi", "espPassword");
   // Serial.println("WiFi connected! IP hostpot Address: " + WiFi.softAPIP().toString());
