@@ -47,7 +47,7 @@
     } catch (err) {
       console.error(err);
     }
-  }, 100);
+  }, 500);
 </script>
 
 <main class="p-4 w-full grid bg-slate-900">
